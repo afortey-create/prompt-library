@@ -314,7 +314,7 @@ body {
 <div class="info-banner">
   <div class="info-banner-inner">
     <p class="info-description">
-      A shared library of curated AI prompts for use across Deloitte Infrastructure &amp; Industry engagements.
+      A shared library of curated AI prompts for use across Deloitte Infrastructure &amp; Industrials engagements.
       Prompts are organised by persona and category to help you find the right starting point quickly.
     </p>
     <p class="info-instruction">
@@ -494,7 +494,7 @@ async function loadAll() {
     ]);
     const [pText, cText, perText] = await Promise.all([pRes.text(), cRes.text(), perRes.text()]);
 
-    const parsedPrompts = parseCSV(pText).filter(r => r.id && r.active !== 'false');
+    const parsedPrompts = parseCSV(pText).filter(r => r.id && String(r.active).toLowerCase().trim() !== 'false');
     const parsedCats    = parseCSV(cText).filter(r => r.name);
     const parsedPers    = parseCSV(perText).filter(r => r.name);
 
