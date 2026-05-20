@@ -510,7 +510,11 @@ async function loadAll() {
     ]);
     const [pText, cText, perText] = await Promise.all([pRes.text(), cRes.text(), perRes.text()]);
 
-    const parsedPrompts = parseCSV(pText).filter(r => r.id && String(r.active).toLowerCase().trim() !== 'false');
+    const parsedPrompts = parseCSV(pText).filter(r => {
+      if (!r.id || !r.title) return false;
+      const active = String(r.active || 'true').toLowerCase().trim();
+      return active !== 'false';
+    });
     const parsedCats    = parseCSV(cText).filter(r => r.name);
     const parsedPers    = parseCSV(perText).filter(r => r.name);
 
