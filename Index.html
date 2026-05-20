@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prompt Library — Deloitte</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── Deloitte Colour Tokens ─────────────────────────────────── */
+:root {
+  --dl-green:        #86BC25;
+  --dl-bright-green: #0DF200;
+  --dl-mid-green:    #3C8F2A;
+  --dl-deep-green:   #046A38;
+  --dl-dark-green:   #1C3D26;
+  --dl-pale-green:   #F1F6E4;
+  --dl-black:        #000000;
+  --dl-dark-gray:    #222222;
+  --dl-mid-gray:     #53565A;
+  --dl-light-gray:   #E6E6E6;
+  --dl-white:        #FFFFFF;
+  --dl-blue:         #007CB0;
+  --dl-teal:         #0097A9;
+
+  --font-primary: 'Deloitte Sans', 'Source Sans 3', 'Segoe UI', sans-serif;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 10px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+}
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: var(--font-primary);
+  background: #F4F5F7;
+  color: var(--dl-dark-gray);
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.header {
+  background: var(--dl-black);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.header-left { display: flex; align-items: center; gap: 16px; }
+.logo-mark {
+  width: 28px; height: 28px;
+  background: var(--dl-green);
+  border-radius: 2px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #000; letter-spacing: -0.5px;
+}
+.header-title {
+  font-size: 15px; font-weight: 600; color: var(--dl-white);
+  letter-spacing: 0.01em;
+}
+.beta-badge {
+  font-size: 10px; font-weight: 600; color: var(--dl-green);
+  border: 1px solid var(--dl-green);
+  border-radius: 3px;
+  padding: 1px 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.header-right { display: flex; align-items: center; gap: 10px; }
+.admin-indicator {
+  font-size: 12px; color: var(--dl-green); font-weight: 500;
+  display: flex; align-items: center; gap: 5px;
+}
+.admin-dot { width: 6px; height: 6px; background: var(--dl-green); border-radius: 50%; }
+.btn-header {
+  height: 30px; padding: 0 14px; font-size: 12px; font-weight: 500;
+  border-radius: var(--radius-sm); cursor: pointer; font-family: var(--font-primary);
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent; color: var(--dl-white);
+  transition: all 0.15s;
+}
+.btn-header:hover { background: rgba(255,255,255,0.08); }
+.btn-header.green { background: var(--dl-green); color: #000; border-color: var(--dl-green); font-weight: 600; }
+.btn-header.green:hover { background: #96cc35; }
+
+/* ── Info Banner ─────────────────────────────────────────────── */
+.info-banner {
+  background: var(--dl-white);
+  border-bottom: 2px solid var(--dl-green);
+  padding: 16px 2rem;
+}
+.info-banner-inner { max-width: 1100px; margin: 0 auto; }
+.info-description { font-size: 13.5px; color: var(--dl-mid-gray); line-height: 1.6; margin-bottom: 8px; }
+.info-instruction { font-size: 13px; color: var(--dl-mid-gray); line-height: 1.6; margin-bottom: 10px; }
+.info-warning {
+  display: flex; align-items: flex-start; gap: 8px;
+  background: #FFF8E6;
+  border: 1px solid #F0C040;
+  border-left: 3px solid #E6A800;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12px; color: #6B4C00; line-height: 1.55;
+}
+.warn-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Main Layout ─────────────────────────────────────────────── */
+.main { max-width: 1100px; margin: 0 auto; padding: 1.75rem 2rem; }
+
+/* ── Controls Bar ────────────────────────────────────────────── */
+.controls { display: flex; gap: 10px; margin-bottom: 1.25rem; align-items: center; }
+.search-wrap { flex: 1; position: relative; }
+.search-wrap input {
+  width: 100%; height: 38px; padding: 0 12px 0 38px;
+  font-size: 13.5px; font-family: var(--font-primary);
+  border: 1px solid #D0D0CE; border-radius: var(--radius-md);
+  background: var(--dl-white); color: var(--dl-dark-gray); outline: none;
+  transition: border-color 0.15s;
+}
+.search-wrap input:focus { border-color: var(--dl-green); box-shadow: 0 0 0 2px rgba(134,188,37,0.15); }
+.search-icon {
+  position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+  font-size: 15px; color: #A7A8AA; pointer-events: none;
+}
+.btn-action {
+  height: 38px; padding: 0 16px; font-size: 13px; font-weight: 600;
+  border-radius: var(--radius-md); cursor: pointer; font-family: var(--font-primary);
+  white-space: nowrap; border: none; transition: all 0.15s;
+}
+.btn-action.primary { background: var(--dl-green); color: #000; }
+.btn-action.primary:hover { background: #96cc35; }
+.btn-action.secondary { background: var(--dl-white); color: var(--dl-mid-gray); border: 1px solid #D0D0CE; }
+.btn-action.secondary:hover { background: #F4F5F7; color: var(--dl-dark-gray); }
+
+/* ── Filter Row ──────────────────────────────────────────────── */
+.filter-section { margin-bottom: 1.25rem; }
+.filter-label {
+  font-size: 10.5px; font-weight: 700; color: #A7A8AA;
+  text-transform: uppercase; letter-spacing: 0.07em;
+  margin-bottom: 7px;
+}
+.pill-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.pill {
+  padding: 5px 14px; border-radius: 20px; font-size: 12.5px;
+  border: 1px solid #D0D0CE; cursor: pointer;
+  background: var(--dl-white); color: var(--dl-mid-gray);
+  transition: all 0.15s; user-select: none; font-family: var(--font-primary);
+}
+.pill:hover { border-color: var(--dl-green); color: var(--dl-dark-gray); }
+.pill.active { background: var(--dl-green); color: #000; border-color: var(--dl-green); font-weight: 600; }
+
+.cat-pill {
+  padding: 4px 12px; border-radius: 20px; font-size: 12px;
+  border: 1px solid #D0D0CE; cursor: pointer;
+  background: var(--dl-white); color: var(--dl-mid-gray);
+  transition: all 0.15s; user-select: none; font-family: var(--font-primary);
+  display: flex; align-items: center; gap: 5px;
+}
+.cat-pill:hover { border-color: var(--dl-green); color: var(--dl-dark-gray); }
+.cat-pill.active { background: #F1F6E4; color: var(--dl-dark-green); border-color: var(--dl-green); font-weight: 600; }
+.cat-rm { font-size: 10px; color: #BBBCBC; cursor: pointer; line-height: 1; }
+.cat-rm:hover { color: #C0392B; }
+
+.add-cat-row { display: flex; gap: 7px; align-items: center; margin-top: 8px; }
+.add-cat-row input {
+  height: 32px; padding: 0 10px; font-size: 13px;
+  border: 1px solid #D0D0CE; border-radius: var(--radius-md);
+  background: var(--dl-white); color: var(--dl-dark-gray);
+  outline: none; width: 180px; font-family: var(--font-primary);
+}
+.add-cat-row input:focus { border-color: var(--dl-green); }
+.btn-xs {
+  height: 32px; padding: 0 12px; font-size: 12px; font-weight: 600;
+  border-radius: var(--radius-md); border: 1px solid var(--dl-green);
+  background: transparent; color: var(--dl-deep-green); cursor: pointer;
+  font-family: var(--font-primary); transition: all 0.15s;
+}
+.btn-xs:hover { background: var(--dl-pale-green); }
+
+/* ── Divider / Count ─────────────────────────────────────────── */
+.divider { height: 1px; background: #E6E6E6; margin: 1.25rem 0; }
+.result-count { font-size: 12.5px; color: #A7A8AA; margin-bottom: 1rem; }
+
+/* ── Card Grid ───────────────────────────────────────────────── */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+.card {
+  background: var(--dl-white);
+  border: 1px solid #E6E6E6;
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  display: flex; flex-direction: column;
+}
+.card:hover { border-color: #BBBCBC; box-shadow: var(--shadow-sm); }
+.card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 9px; }
+.card-title { font-size: 14px; font-weight: 600; color: var(--dl-dark-gray); line-height: 1.4; }
+.persona-badge {
+  font-size: 11px; padding: 2px 9px; border-radius: 20px;
+  white-space: nowrap; flex-shrink: 0; margin-left: 10px;
+  font-weight: 500;
+}
+.pb-pro    { background: #E3EFF9; color: #0C5A96; }
+.pb-pm     { background: #E8F5E9; color: #1B6B2E; }
+.pb-analyst{ background: #FFF3E0; color: #8B4513; }
+.pb-dev    { background: #EDE7F6; color: #4A235A; }
+.pb-owner  { background: #FCE4EC; color: #880E4F; }
+.pb-client { background: #E0F7FA; color: #006064; }
+.pb-pers   { background: #F1F6E4; color: #1C3D26; }
+
+.card-preview {
+  font-size: 12.5px; color: #75787B; line-height: 1.55;
+  margin-bottom: 12px; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-footer { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+.card-cat { font-size: 11px; color: #A7A8AA; }
+.card-actions { display: flex; gap: 5px; }
+.copy-btn, .edit-btn, .del-btn {
+  font-size: 11.5px; padding: 4px 11px; border-radius: var(--radius-sm);
+  border: 1px solid #D0D0CE; background: transparent;
+  color: var(--dl-mid-gray); cursor: pointer; font-family: var(--font-primary);
+  transition: all 0.15s;
+}
+.copy-btn { color: var(--dl-deep-green); border-color: #86BC25; font-weight: 600; }
+.copy-btn:hover { background: var(--dl-pale-green); }
+.copy-btn.copied { background: var(--dl-pale-green); color: var(--dl-mid-green); }
+.edit-btn:hover { background: #F4F5F7; color: var(--dl-dark-gray); }
+.del-btn:hover { background: #FFF5F5; color: #C0392B; border-color: #F09595; }
+
+/* ── Empty / Loading ─────────────────────────────────────────── */
+.state-msg {
+  grid-column: 1/-1; padding: 3rem; text-align: center;
+  color: #A7A8AA; font-size: 14px;
+}
+.spinner {
+  width: 24px; height: 24px; border: 2px solid #E6E6E6;
+  border-top-color: var(--dl-green); border-radius: 50%;
+  animation: spin 0.7s linear infinite; margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Modal ───────────────────────────────────────────────────── */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.45);
+  display: flex; align-items: center; justify-content: center; z-index: 200;
+}
+.modal {
+  background: var(--dl-white); border-radius: var(--radius-lg);
+  padding: 26px 28px; width: 460px; max-width: 96vw;
+  box-shadow: var(--shadow-md);
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.modal h3 { font-size: 16px; font-weight: 700; color: var(--dl-dark-gray); }
+.modal-close { background: none; border: none; font-size: 20px; color: #A7A8AA; cursor: pointer; line-height: 1; }
+.modal-close:hover { color: var(--dl-dark-gray); }
+.field-label { font-size: 12px; font-weight: 600; color: var(--dl-mid-gray); display: block; margin-bottom: 5px; margin-top: 14px; text-transform: uppercase; letter-spacing: 0.04em; }
+.modal input, .modal select, .modal textarea {
+  width: 100%; padding: 9px 12px; font-size: 13.5px;
+  border: 1px solid #D0D0CE; border-radius: var(--radius-md);
+  background: var(--dl-white); color: var(--dl-dark-gray);
+  outline: none; font-family: var(--font-primary);
+}
+.modal input:focus, .modal select:focus, .modal textarea:focus {
+  border-color: var(--dl-green); box-shadow: 0 0 0 2px rgba(134,188,37,0.15);
+}
+.modal textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+/* ── Admin Login Modal ───────────────────────────────────────── */
+.login-modal {
+  background: var(--dl-white); border-radius: var(--radius-lg);
+  padding: 28px; width: 360px; max-width: 96vw;
+  box-shadow: var(--shadow-md);
+}
+.login-modal h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.login-modal p { font-size: 13px; color: #75787B; margin-bottom: 18px; }
+.login-error { font-size: 12.5px; color: #C0392B; margin-top: 8px; min-height: 18px; }
+
+/* ── Footer ──────────────────────────────────────────────────── */
+.page-footer {
+  text-align: center; padding: 2rem;
+  font-size: 11.5px; color: #BBBCBC;
+  border-top: 1px solid #E6E6E6; margin-top: 2rem;
+}
+.page-footer strong { color: #A7A8AA; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo-mark">D.</div>
+    <span class="header-title">Prompt Library <span class="beta-badge">Beta</span></span>
+  </div>
+  <div class="header-right">
+    <div id="admin-indicator" class="admin-indicator" style="display:none">
+      <div class="admin-dot"></div> Admin
+    </div>
+    <button class="btn-header" id="admin-btn" onclick="handleAdminBtn()">Admin login</button>
+    <button class="btn-header green" id="add-btn" style="display:none" onclick="openAddModal()">+ New prompt</button>
+  </div>
+</header>
+
+<!-- ── Info Banner ── -->
+<div class="info-banner">
+  <div class="info-banner-inner">
+    <p class="info-description">
+      A shared library of curated AI prompts for use across Deloitte Infrastructure &amp; Industrials engagements.
+      Prompts are organised by persona and category to help you find the right starting point quickly.
+    </p>
+    <p class="info-instruction">
+      Browse or search for a prompt, then click <strong>Copy</strong> to copy it to your clipboard.
+      Paste directly into any AI tool — including Copilot, Claude, Gemini, or ChatGPT — and customise the <strong>[bracketed variables]</strong> before submitting.
+    </p>
+    <div class="info-warning">
+      <span class="warn-icon">⚠️</span>
+      <span>
+        <strong>Important:</strong> AI-generated responses must always be independently reviewed, verified, and validated before use in client deliverables or internal decisions.
+        Do <strong>not</strong> paste private client data, personal information, commercially sensitive material, or Deloitte confidential information into any external AI tool.
+        Use only approved platforms for work involving sensitive or classified content.
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ── Main ── -->
+<main class="main">
+
+  <!-- Search + Add -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search" placeholder="Search prompts by title, category or keyword…" oninput="renderCards()"/>
+    </div>
+    <button class="btn-action secondary" onclick="loadAll()">↺ Refresh</button>
+  </div>
+
+  <!-- Persona filter -->
+  <div class="filter-section">
+    <div class="filter-label">Persona</div>
+    <div class="pill-row" id="persona-pills"></div>
+  </div>
+
+  <!-- Category filter -->
+  <div class="filter-section">
+    <div class="filter-label">Category</div>
+    <div class="pill-row" id="cat-pills"></div>
+    <div id="add-cat-wrap" class="add-cat-row" style="display:none">
+      <input type="text" id="new-cat-input" placeholder="New category name…" maxlength="30" onkeydown="if(event.key==='Enter')addCategory()"/>
+      <button class="btn-xs" onclick="addCategory()">+ Add</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="result-count" id="result-count"></div>
+
+  <!-- Card grid -->
+  <div class="grid" id="card-grid">
+    <div class="state-msg"><div class="spinner"></div>Loading prompts…</div>
+  </div>
+
+</main>
+
+<footer class="page-footer">
+  <strong>Deloitte Infrastructure &amp; Industrials</strong> · Prompt Library Beta · For internal use only
+</footer>
+
+<!-- ── Add/Edit Modal ── -->
+<div id="prompt-modal" style="display:none">
+  <div class="modal-bg" onclick="closePModalBg(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 id="pm-title">New prompt</h3>
+        <button class="modal-close" onclick="closePromptModal()">×</button>
+      </div>
+      <label class="field-label">Title</label>
+      <input type="text" id="pm-f-title" placeholder="Short descriptive name" maxlength="80"/>
+      <label class="field-label">Persona</label>
+      <select id="pm-f-persona"></select>
+      <label class="field-label">Category</label>
+      <select id="pm-f-cat"></select>
+      <label class="field-label">Prompt text</label>
+      <textarea id="pm-f-text" placeholder="Write your prompt here. Use [brackets] for variables."></textarea>
+      <div class="modal-footer">
+        <button class="btn-action secondary" style="height:36px;font-size:13px" onclick="closePromptModal()">Cancel</button>
+        <button class="btn-action primary" style="height:36px;font-size:13px" onclick="savePrompt()">Save prompt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Admin Login Modal ── -->
+<div id="login-modal" style="display:none">
+  <div class="modal-bg" onclick="closeLoginBg(event)">
+    <div class="login-modal" onclick="event.stopPropagation()">
+      <h3>Admin access</h3>
+      <p>Enter your username and the admin key to unlock editing.</p>
+      <label class="field-label">Username</label>
+      <input type="text" id="login-user" placeholder="e.g. afortey" maxlength="40" autocomplete="off"/>
+      <label class="field-label">Admin key</label>
+      <input type="password" id="login-key" placeholder="••••••••••" onkeydown="if(event.key==='Enter')attemptLogin()"/>
+      <div class="login-error" id="login-error"></div>
+      <div class="modal-footer">
+        <button class="btn-action secondary" style="height:36px;font-size:13px" onclick="document.getElementById('login-modal').style.display='none'">Cancel</button>
+        <button class="btn-action primary" style="height:36px;font-size:13px" onclick="attemptLogin()">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Config ─────────────────────────────────────────────────── */
+const SCRIPT_URL  = 'https://script.google.com/macros/s/AKfycbxlC_30Gs5chAMtFgNri7PCKiwbNBdRAqkRuc5FleQFQU6RtwwdrCHOFk0iSecmEWqyuQ/exec';
+const PROMPTS_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTdvJBRa9MUOxsYMN57UOyhlXJQA3z_6sbGoi8XHJ2Z2d0i8PWPumoJT0S2EV8q5JiS1lb2oJcKXk_9/pub?gid=0&single=true&output=csv';
+const CATS_CSV    = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTdvJBRa9MUOxsYMN57UOyhlXJQA3z_6sbGoi8XHJ2Z2d0i8PWPumoJT0S2EV8q5JiS1lb2oJcKXk_9/pub?gid=1518775106&single=true&output=csv';
+const PERSONAS_CSV= 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTdvJBRa9MUOxsYMN57UOyhlXJQA3z_6sbGoi8XHJ2Z2d0i8PWPumoJT0S2EV8q5JiS1lb2oJcKXk_9/pub?gid=377054858&single=true&output=csv';
+const ADMIN_KEY   = 'DelPromptL2026!';
+const ADMIN_USERS = ['afortey','msutherland','rmurphy','abuckmaster','jtoms'];
+
+/* ── Default seed data ──────────────────────────────────────── */
+const DEFAULT_CATS = ['Financial','Reporting','Analysis','Dashboard','Estimate','Planning','Risk','Delivery','Strategy','Proposal','Bus. Dev.','Feasibility','AI / Agents','Developer'];
+const DEFAULT_PERSONAS = ['Professional','Project Manager','Analyst','Developer','Owner','Client','Personal'];
+const DEFAULT_PROMPTS = [
+  {id:'1',title:'BLUF briefing note',persona:'Professional',cat:'Strategy',text:'Summarise [topic] as a 5-sentence BLUF briefing for a senior partner. Lead with the headline, follow with context, close with recommended action.'},
+  {id:'2',title:'Go/No-Go recommendation',persona:'Professional',cat:'Proposal',text:'Assess this pursuit opportunity against five weighted criteria: strategic fit, win probability, margin, resourcing, and client relationship. Score each 1–5 and recommend go or no-go with rationale.'},
+  {id:'3',title:'Competitor positioning analysis',persona:'Professional',cat:'Bus. Dev.',text:'Map [competitor] against Deloitte across: sector coverage, capability depth, pricing position, and recent wins. Identify where we differentiate and where we are vulnerable.'},
+  {id:'4',title:'Executive slide — single message',persona:'Professional',cat:'Reporting',text:'Write a single PowerPoint slide for a senior executive audience. Format: Title (7 words max) / Tagline (one punchy sentence) / 3 bullet body / Speaker notes (3 sentences).'},
+  {id:'5',title:'9-box talent narrative',persona:'Professional',cat:'Reporting',text:'Write a 3-sentence performance narrative for [name]. Position in 9-box: [box]. Tone: developmental and specific. No PII beyond first name.'},
+  {id:'6',title:'Client debrief questions',persona:'Professional',cat:'Bus. Dev.',text:'Generate 8 debrief questions for a post-tender client conversation. Mix: decision rationale, competitor differentiation, pricing feedback, relationship factors. Tone: curious, not defensive.'},
+  {id:'7',title:'Market entry briefing',persona:'Analyst',cat:'Strategy',text:'Produce a structured market entry briefing for [client] entering [sector/geography]. Cover: market size, key players, regulatory context, entry barriers, and Deloitte positioning.'},
+  {id:'8',title:'Risk register entry',persona:'Project Manager',cat:'Risk',text:'Write a risk register entry for [risk event]. Include: description, likelihood (1–5), consequence (1–5), risk rating, owner, mitigation actions, and residual risk.'},
+  {id:'9',title:'Development feasibility summary',persona:'Professional',cat:'Feasibility',text:'Summarise the feasibility of [site] for [development type]. Cover: land cost, build cost, GRV, margin, key risks, and go/no-go recommendation. AUD, Australian market context.'},
+  {id:'10',title:'Planning overlay assessment',persona:'Analyst',cat:'Planning',text:'Assess the planning controls applicable to [address or zone]. Cover: zone, overlays, heritage, parking, height limits, and any site-specific constraints. Reference the relevant planning scheme.'},
+  {id:'11',title:'Investment screening memo',persona:'Professional',cat:'Financial',text:'Screen [investment opportunity] against these criteria: risk-adjusted return, structure fit, capital deployment timeline, and exit strategy. Recommend proceed, pass, or further diligence.'},
+  {id:'12',title:'Programme milestone timeline',persona:'Project Manager',cat:'Planning',text:'Generate a programme milestone timeline for [project]. Include: key phases, milestone dates, dependencies, critical path items, and early warning indicators. Format as a structured table.'},
+  {id:'13',title:'Agent design brief',persona:'Developer',cat:'AI / Agents',text:'Design an AI agent for [use case]. Cover: objective, trigger conditions, data inputs, decision logic, outputs, escalation rules, and recommended tech stack.'},
+  {id:'14',title:'Slide critique',persona:'Analyst',cat:'Reporting',text:'Critique the following slide content on: narrative clarity, evidence strength, visual logic, and executive appropriateness. Identify the single most important fix and suggest revised wording.'},
+  {id:'15',title:'Cost estimate summary',persona:'Project Manager',cat:'Estimate',text:'Summarise the cost estimate for [project/scope]. Structure as: base estimate, contingency, risk allowance, exclusions, and key assumptions. Flag the top three cost risk items.'},
+  {id:'16',title:'Stakeholder communication',persona:'Client',cat:'Reporting',text:'Draft a stakeholder communication for [audience] regarding [topic]. Tone: clear, professional, and reassuring. Include: context, key message, actions required, and next steps.'},
+];
+
+/* ── State ──────────────────────────────────────────────────── */
+let prompts   = [];
+let cats      = [...DEFAULT_CATS];
+let personas  = [...DEFAULT_PERSONAS];
+let isAdmin   = false;
+let adminUser = '';
+let activePer = 'All';
+let activeCat = 'All';
+let editingId = null;
+
+const pBadge = {
+  'Professional':'pb-pro','Project Manager':'pb-pm','Analyst':'pb-analyst',
+  'Developer':'pb-dev','Owner':'pb-owner','Client':'pb-client','Personal':'pb-pers'
+};
+
+/* ── CSV parser (RFC 4180 — handles multi-line quoted fields) ── */
+function parseCSV(text) {
+  // Normalise line endings
+  const input = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+  // Tokenise: walk char by char, respecting quoted fields that may span lines
+  function tokenise(str) {
+    const rows = []; let row = []; let cur = ''; let inQ = false; let i = 0;
+    while (i < str.length) {
+      const ch = str[i];
+      if (inQ) {
+        if (ch === '"') {
+          if (str[i+1] === '"') { cur += '"'; i += 2; } // escaped quote
+          else { inQ = false; i++; }
+        } else { cur += ch; i++; }
+      } else {
+        if (ch === '"') { inQ = true; i++; }
+        else if (ch === ',') { row.push(cur); cur = ''; i++; }
+        else if (ch === '\n') { row.push(cur); rows.push(row); row = []; cur = ''; i++; }
+        else { cur += ch; i++; }
+      }
+    }
+    if (cur || row.length) { row.push(cur); rows.push(row); }
+    return rows;
+  }
+
+  const rows = tokenise(input).filter(r => r.some(c => c.trim() !== ''));
+  if (rows.length < 2) return [];
+  const headers = rows[0].map(h => h.trim());
+  return rows.slice(1).map(row => {
+    const obj = {};
+    headers.forEach((h, i) => obj[h] = (row[i] || '').trim());
+    return obj;
+  });
+}
+
+/* ── Load data ──────────────────────────────────────────────── */
+async function loadAll() {
+  showLoading();
+  try {
+    const [pRes, cRes, perRes] = await Promise.all([
+      fetch(PROMPTS_CSV + '&t=' + Date.now()),
+      fetch(CATS_CSV    + '&t=' + Date.now()),
+      fetch(PERSONAS_CSV+ '&t=' + Date.now()),
+    ]);
+    const [pText, cText, perText] = await Promise.all([pRes.text(), cRes.text(), perRes.text()]);
+
+    const parsedPrompts = parseCSV(pText).filter(r => r.id && String(r.active).toLowerCase().trim() !== 'false');
+    const parsedCats    = parseCSV(cText).filter(r => r.name);
+    const parsedPers    = parseCSV(perText).filter(r => r.name);
+
+    const pendingLocal  = prompts.filter(p => String(p.id).startsWith('tmp_'));
+    const sheetPrompts  = parsedPrompts.length ? parsedPrompts : DEFAULT_PROMPTS;
+    prompts  = [...pendingLocal, ...sheetPrompts];
+    cats     = parsedCats.length    ? parsedCats.map(r=>r.name)    : DEFAULT_CATS;
+    personas = parsedPers.length    ? parsedPers.map(r=>r.name)    : DEFAULT_PERSONAS;
+  } catch(e) {
+    prompts  = DEFAULT_PROMPTS;
+    cats     = DEFAULT_CATS;
+    personas = DEFAULT_PERSONAS;
+  }
+  buildPersonaPills();
+  buildCatPills();
+  renderCards();
+}
+
+function showLoading() {
+  document.getElementById('card-grid').innerHTML = '<div class="state-msg"><div class="spinner"></div>Loading prompts…</div>';
+}
+
+/* ── Persona pills ──────────────────────────────────────────── */
+function buildPersonaPills() {
+  const all = ['All', ...personas];
+  document.getElementById('persona-pills').innerHTML = all.map(p =>
+    `<div class="pill ${p===activePer?'active':''}" onclick="setPer('${esc(p)}')">${esc(p)}</div>`
+  ).join('');
+}
+
+/* ── Category pills ─────────────────────────────────────────── */
+function buildCatPills() {
+  const all = ['All', ...cats];
+  document.getElementById('cat-pills').innerHTML = all.map(c => {
+    if (c === 'All') return `<div class="cat-pill ${activeCat==='All'?'active':''}" onclick="setCat('All')">All</div>`;
+    const rm = isAdmin ? `<span class="cat-rm" onclick="event.stopPropagation();removeCategory('${esc(c)}')">✕</span>` : '';
+    return `<div class="cat-pill ${c===activeCat?'active':''}" onclick="setCat('${esc(c)}')">${esc(c)}${rm}</div>`;
+  }).join('');
+  document.getElementById('add-cat-wrap').style.display = isAdmin ? 'flex' : 'none';
+  // Populate modal selects
+  const pSel = document.getElementById('pm-f-persona');
+  if(pSel) pSel.innerHTML = personas.map(p=>`<option value="${esc(p)}">${esc(p)}</option>`).join('');
+  const cSel = document.getElementById('pm-f-cat');
+  if(cSel) cSel.innerHTML = cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+}
+
+function setPer(p) { activePer = p; buildPersonaPills(); renderCards(); }
+function setCat(c) { activeCat = c; buildCatPills(); renderCards(); }
+
+/* ── Render cards ───────────────────────────────────────────── */
+function renderCards() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const filtered = prompts.filter(p => {
+    const mp = activePer === 'All' || p.persona === activePer;
+    const mc = activeCat === 'All' || p.cat === activeCat;
+    const mq = !q || (p.title||'').toLowerCase().includes(q) || (p.cat||'').toLowerCase().includes(q) || (p.text||'').toLowerCase().includes(q);
+    return mp && mc && mq;
+  });
+  document.getElementById('result-count').textContent = `${filtered.length} prompt${filtered.length!==1?'s':''}`;
+  const g = document.getElementById('card-grid');
+  if (!filtered.length) { g.innerHTML = '<div class="state-msg">No prompts match your search.</div>'; return; }
+  g.innerHTML = filtered.map(p => {
+    const badge = pBadge[p.persona] || 'pb-pro';
+    const adminBtns = isAdmin
+      ? `<button class="edit-btn" onclick="openEditModal('${esc(p.id)}')">Edit</button>
+         <button class="del-btn" onclick="deletePrompt('${esc(p.id)}')">Delete</button>`
+      : '';
+    return `
+      <div class="card">
+        <div class="card-top">
+          <div class="card-title">${esc(p.title)}</div>
+          <span class="persona-badge ${badge}">${esc(p.persona)}</span>
+        </div>
+        <div class="card-preview">${esc(p.text)}</div>
+        <div class="card-footer">
+          <span class="card-cat">${esc(p.cat)}</span>
+          <div class="card-actions">
+            ${adminBtns}
+            <button class="copy-btn" id="cbtn-${p.id}" onclick="copyPrompt('${esc(p.id)}','${esc(p.text.replace(/'/g,"\\'"))}')">Copy</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+/* ── Copy ───────────────────────────────────────────────────── */
+function copyPrompt(id, text) {
+  const p = prompts.find(x => String(x.id) === String(id));
+  const t = p ? p.text : text;
+  navigator.clipboard.writeText(t).then(() => {
+    const btn = document.getElementById('cbtn-' + id);
+    if (btn) { btn.textContent = 'Copied!'; btn.classList.add('copied'); setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 1600); }
+  });
+}
+
+/* ── Admin auth ─────────────────────────────────────────────── */
+function handleAdminBtn() {
+  if (isAdmin) { logoutAdmin(); }
+  else { document.getElementById('login-modal').style.display = 'flex'; }
+}
+
+function attemptLogin() {
+  const user = document.getElementById('login-user').value.trim().toLowerCase();
+  const key  = document.getElementById('login-key').value;
+  const err  = document.getElementById('login-error');
+  if (!ADMIN_USERS.includes(user)) { err.textContent = 'Username not recognised.'; return; }
+  if (key !== ADMIN_KEY) { err.textContent = 'Incorrect admin key.'; return; }
+  isAdmin = true; adminUser = user;
+  document.getElementById('login-modal').style.display = 'none';
+  document.getElementById('admin-indicator').style.display = 'flex';
+  document.getElementById('admin-btn').textContent = 'Logout';
+  document.getElementById('add-btn').style.display = 'inline-block';
+  err.textContent = '';
+  buildCatPills(); renderCards();
+}
+
+function logoutAdmin() {
+  isAdmin = false; adminUser = '';
+  document.getElementById('admin-indicator').style.display = 'none';
+  document.getElementById('admin-btn').textContent = 'Admin login';
+  document.getElementById('add-btn').style.display = 'none';
+  buildCatPills(); renderCards();
+}
+
+function closeLoginBg(e) { if(e.target.classList.contains('modal-bg')) document.getElementById('login-modal').style.display='none'; }
+
+/* ── Prompt modal ───────────────────────────────────────────── */
+function openAddModal() {
+  editingId = null;
+  document.getElementById('pm-title').textContent = 'New prompt';
+  document.getElementById('pm-f-title').value = '';
+  document.getElementById('pm-f-persona').value = personas[0] || 'Professional';
+  document.getElementById('pm-f-cat').value = cats[0] || '';
+  document.getElementById('pm-f-text').value = '';
+  buildCatPills();
+  document.getElementById('prompt-modal').style.display = 'flex';
+}
+
+function openEditModal(id) {
+  const p = prompts.find(x => String(x.id) === String(id));
+  if (!p) return;
+  editingId = id;
+  document.getElementById('pm-title').textContent = 'Edit prompt';
+  document.getElementById('pm-f-title').value  = p.title;
+  buildCatPills();
+  document.getElementById('pm-f-persona').value = p.persona;
+  document.getElementById('pm-f-cat').value     = p.cat;
+  document.getElementById('pm-f-text').value    = p.text;
+  document.getElementById('prompt-modal').style.display = 'flex';
+}
+
+function closePromptModal() { document.getElementById('prompt-modal').style.display = 'none'; }
+function closePModalBg(e)   { if(e.target.classList.contains('modal-bg')) closePromptModal(); }
+
+async function savePrompt() {
+  const title   = document.getElementById('pm-f-title').value.trim();
+  const persona = document.getElementById('pm-f-persona').value;
+  const cat     = document.getElementById('pm-f-cat').value;
+  const text    = document.getElementById('pm-f-text').value.trim();
+  if (!title || !text) { alert('Title and prompt text are required.'); return; }
+  closePromptModal();
+
+  if (editingId) {
+    // Optimistic update
+    const idx = prompts.findIndex(x => String(x.id) === String(editingId));
+    if (idx !== -1) { prompts[idx] = { id: prompts[idx].id, title, persona, cat, text, active: 'true' }; }
+    renderCards();
+    callScript('updatePrompt', { id: editingId, title, persona, cat, text });
+    showToast('Prompt updated.');
+  } else {
+    // Optimistic add
+    const tempId = 'tmp_' + Date.now();
+    prompts.unshift({ id: tempId, title, persona, cat, text, active: 'true' });
+    buildPersonaPills();
+    buildCatPills();
+    renderCards();
+    callScript('addPrompt', { title, persona, cat, text });
+    showToast('Prompt added — sheet will sync within a few minutes.');
+  }
+}
+
+async function deletePrompt(id) {
+  if (!confirm('Delete this prompt? This cannot be undone.')) return;
+  // Optimistic remove
+  prompts = prompts.filter(p => String(p.id) !== String(id));
+  renderCards();
+  callScript('deletePrompt', { id });
+  showToast('Prompt deleted.');
+}
+
+/* ── Category management ────────────────────────────────────── */
+async function addCategory() {
+  const inp = document.getElementById('new-cat-input');
+  const name = inp.value.trim();
+  if (!name || cats.includes(name)) return;
+  inp.value = '';
+  // Optimistic add
+  cats.push(name);
+  buildCatPills();
+  renderCards();
+  callScript('addCategory', { name });
+}
+
+async function removeCategory(name) {
+  if (!confirm(`Remove category "${name}"?`)) return;
+  // Optimistic remove
+  cats = cats.filter(c => c !== name);
+  if (activeCat === name) activeCat = 'All';
+  buildCatPills();
+  renderCards();
+  callScript('deleteCategory', { name });
+}
+
+/* ── Toast ──────────────────────────────────────────────────── */
+function showToast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 20px;border-radius:6px;font-size:13px;z-index:999;opacity:0;transition:opacity 0.2s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.opacity = '0'; }, 3000);
+}
+
+/* ── Script call ────────────────────────────────────────────── */
+async function callScript(action, payload) {
+  try {
+    await fetch(SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, payload, adminKey: ADMIN_KEY }),
+    });
+  } catch(e) { console.error('Script error', e); }
+}
+
+/* ── Init ───────────────────────────────────────────────────── */
+loadAll();
+</script>
+</body>
+</html>
